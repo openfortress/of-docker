@@ -16,7 +16,8 @@ RUN ln -s /usr/bin/gcc-9 /usr/bin/gcc
 RUN ln -s /usr/bin/g++-9 /usr/bin/g++
 
 RUN apt-get update && apt-get install --force-yes -y --no-install-recommends \
-    git
+    libstdc++6-4.6-dbg \
+    libstdc++6-4.6-dev
 #    libmpfr-dev \
 #    libmpc-dev \
 #    flex
@@ -30,6 +31,8 @@ RUN make -j 4
 RUN make install
 WORKDIR /
 RUN rm -rf /tmp/cmake-2.23.2
+
+RUN ln -s /usr/lib/i386-linux-gnu/libstdc++.so.6 /usr/lib/libstdc++.so
 
 #we may have to download and compile gcc at this point but I didnt realize that gcc 9 is already installed
 #WORKDIR /tmp
