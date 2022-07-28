@@ -18,4 +18,7 @@ RUN userdel -f jimb
 RUN addgroup --gid $GROUP_ID of
 RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID of
 
+RUN mkdir /ofd
+RUN chown of /ofd
+
 USER of
