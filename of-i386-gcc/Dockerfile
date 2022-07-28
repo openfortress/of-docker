@@ -1,5 +1,8 @@
 FROM jimbly/steamrt-i386-gcc
 
+ARG GROUP_ID
+ARG USER_ID
+
 #fix sources list
 RUN rm -rf /etc/apt/sources.list
 RUN printf 'deb http://old-releases.ubuntu.com/ubuntu/ precise main\n \
@@ -22,25 +25,14 @@ RUN apt-get update && apt-get install --force-yes -y --no-install-recommends \
 #    libmpc-dev \
 #    flex
 
-ADD https://github.com/Kitware/CMake/releases/download/v3.23.2/cmake-3.23.2.tar.gz /tmp
-WORKDIR /tmp
-RUN tar -xvzf cmake-3.23.2.tar.gz
-WORKDIR /tmp/cmake-3.23.2
-RUN ./bootstrap
-RUN make -j 4
-RUN make install
-WORKDIR /
-RUN rm -rf /tmp/cmake-2.23.2
-
 RUN ln -s /usr/lib/i386-linux-gnu/libstdc++.so.6 /usr/lib/libstdc++.so
 
-#we may have to download and compile gcc at this point but I didnt realize that gcc 9 is already installed
-#WORKDIR /tmp
-#RUN git clone --depth 1 -b releases/gcc-10 git://gcc.gnu.org/git/gcc.git
-#WORKDIR /tmp/gcc
-#RUN ./configure
-#used to use bootstrap-lean until having issues
-#RUN make BOOT_CFLAGS='-O' bootstrap
-#RUN make install
-#WORKDIR /
-#RUN rm -rf /tmp/gcc
+RUN userdel -f jimb
+
+RUN addgroup --gid $GROUP_ID of
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID of
+
+RUN mkdir /ofd
+RUN chown of /ofd
+
+USER of
