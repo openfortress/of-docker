@@ -6,9 +6,12 @@ DOCKER_FILE_PATH=of-i386-gcc
 DOCKER_IMAGE_TAG=openfortress/steamrt-i386-gcc
 BUILD_DOCKER=1
 
+ENABLE_LOGGING=1
+
 #internal use:
 CFG_TYPE=
 SOURCES_DIR=
+LOGGING_CONF=cat
 
 if [ ! -d ccache ]; then
     mkdir ccache;
@@ -29,6 +32,10 @@ if [ -z ${GAME_SRC_DIR} ];
         SOURCES_DIR=$GAME_SRC_DIR
 fi
 
+if [ "${ENABLE_LOGGING}" -eq 1 ]; then
+    LOGGING_CONF="tee build.log"
+fi
+
 if [ "${BUILD_DOCKER}" -eq 1 ]; then
     docker build \
         --build-arg USER_ID="$(id -u)" \
@@ -45,4 +52,4 @@ docker run \
     -v $PWD/scripts:/ofd/scripts \
     -v $SOURCES_DIR:/ofd/$DEFAULT_GAME_SOURCE_FOLDER \
     -w /ofd $DOCKER_IMAGE_TAG \
-    ./scripts/build.sh $@
+    ./scripts/build.sh $@ |& $LOGGING_CONF
