@@ -37,7 +37,7 @@ if [ -z ${GAME_SRC_DIR} ];
 fi
 
 if [ "${ENABLE_LOGGING}" -eq 1 ]; then
-    LOGGING_CONF="tee build.log"
+    LOGGING_CONF="tee -i build.log"
 fi
 
 if [ "${BUILD_DOCKER}" -eq 1 ]; then
