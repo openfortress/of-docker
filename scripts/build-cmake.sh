@@ -1,4 +1,4 @@
 #!/bin/bash
 
-cmake ../$DEFAULT_GAME_SOURCE_FOLDER/src
+cmake ../Open-Fortress-Source/src
 make -j `nproc`
