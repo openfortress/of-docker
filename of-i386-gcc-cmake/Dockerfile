@@ -23,7 +23,8 @@ RUN ln -s /usr/bin/g++-9 /usr/bin/g++
 
 RUN apt-get update && apt-get install --force-yes -y --no-install-recommends \
     libstdc++6-4.6-dbg \
-    libstdc++6-4.6-dev
+    libstdc++6-4.6-dev \
+    unzip
 #    libmpfr-dev \
 #    libmpc-dev \
 #    flex
@@ -35,8 +36,17 @@ WORKDIR /tmp/cmake-3.23.2
 RUN ./bootstrap --parallel=`nproc`
 RUN make -j `nproc`
 RUN make install
+
+WORKDIR /tmp
+ADD https://github.com/Fenteale/caffeene/archive/refs/heads/main.zip /tmp
+RUN unzip main.zip
+WORKDIR /tmp/caffeene-main
+RUN make
+RUN make install
+
 WORKDIR /
 RUN rm -rf /tmp/cmake-3.23.2
+RUN rm -rf /tmp/caffeene-main
 
 RUN ln -s /usr/lib/i386-linux-gnu/libstdc++.so.6 /usr/lib/libstdc++.so
 
