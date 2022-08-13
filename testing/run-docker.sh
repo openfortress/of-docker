@@ -2,9 +2,9 @@
 
 #edit these for your own mod:
 DEFAULT_GAME_SOURCE_FOLDER=Open-Fortress-Source
-DOCKER_FILE_PATH=of-i386-gcc4
-DOCKER_IMAGE_TAG=openfortress/steamrt-i386-gcc4
-BUILD_DOCKER=1
+DOCKER_FILE_PATH=of-i386-clang
+DOCKER_IMAGE_TAG=fenteale/openfortress-i386-gcc
+BUILD_DOCKER=0
 
 ENABLE_LOGGING=1
 

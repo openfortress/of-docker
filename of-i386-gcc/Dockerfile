@@ -1,38 +1,32 @@
-FROM jimbly/steamrt-i386-gcc
+FROM fenteale/openfortress-i386-base
 
-ARG GROUP_ID
-ARG USER_ID
-
-#fix sources list
-RUN rm -rf /etc/apt/sources.list
-RUN printf 'deb http://old-releases.ubuntu.com/ubuntu/ precise main\n \
-deb-src http://old-releases.ubuntu.com/ubuntu precise main \n \
-deb http://old-releases.ubuntu.com/ubuntu precise universe \n \
-deb-src http://old-releases.ubuntu.com/ubuntu precise universe\n' > /etc/apt/sources.list
-
-#RUN ln -s /usr/include/asm-generic /usr/include/asm
-
-RUN rm /usr/bin/gcc
-RUN rm /usr/bin/g++
-
-RUN ln -s /usr/bin/gcc-9 /usr/bin/gcc
-RUN ln -s /usr/bin/g++-9 /usr/bin/g++
+RUN apt-get update && apt-get install --force-yes -y --no-install-recommends \
+  gcc-4.8 g++-4.8 gcc-9 g++9 \
+  # clang-3.4:i386 lldb-3.4:i386 \
+  # clang-3.6:i386 lldb-3.6:i386 \
+  && if [ -d /usr/include/i386-linux-gnu/c++/4.8 ]; then \
+    ln -s /usr/include/i386-linux-gnu/c++/4.8 /usr/include/c++/4.8/i686-linux-gnu; \
+  fi && \
+  update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50 && \
+  update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50 && \
+  update-alternatives --install /usr/bin/cpp cpp-bin /usr/bin/cpp-4.8 50 && \
+  \
+  update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 100 && \
+  update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 100 && \
+  update-alternatives --install /usr/bin/cpp cpp-bin /usr/bin/cpp-9 100 && \
+  \
+  # update-alternatives --install /usr/bin/gcc gcc /usr/bin/clang-3.4 50 && \
+  # update-alternatives --install /usr/bin/g++ g++ /usr/bin/clang++-3.4 50 && \
+  # \
+  # update-alternatives --install /usr/bin/gcc gcc /usr/bin/clang-3.6 50 && \
+  # update-alternatives --install /usr/bin/g++ g++ /usr/bin/clang++-3.6 50   && \
+  \
+  update-alternatives --set gcc /usr/bin/gcc-9 && \
+  update-alternatives --set g++ /usr/bin/g++-9 && \
+  update-alternatives --set cpp-bin /usr/bin/cpp-9
 
 RUN apt-get update && apt-get install --force-yes -y --no-install-recommends \
     libstdc++6-4.6-dbg \
     libstdc++6-4.6-dev
-#    libmpfr-dev \
-#    libmpc-dev \
-#    flex
 
 RUN ln -s /usr/lib/i386-linux-gnu/libstdc++.so.6 /usr/lib/libstdc++.so
-
-RUN userdel -f jimb
-
-RUN addgroup --gid $GROUP_ID of
-RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID of
-
-RUN mkdir /ofd
-RUN chown of /ofd
-
-USER of
