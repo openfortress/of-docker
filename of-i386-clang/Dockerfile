@@ -22,7 +22,12 @@ RUN apt-get update && apt-get install --force-yes -y --no-install-recommends \
   update-alternatives --install /usr/bin/g++ g++ /usr/bin/clang++-3.6 50   && \
   \
   update-alternatives --set gcc /usr/bin/clang-3.6 && \
-  update-alternatives --set g++ /usr/bin/clang++-3.6
+  update-alternatives --set g++ /usr/bin/clang++-3.6 && \
+  update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.6 50 && \
+  update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6 50   && \
+  \
+  update-alternatives --set clang /usr/bin/clang-3.6 && \
+  update-alternatives --set clang++ /usr/bin/clang++-3.6
 
 RUN update-alternatives --install /usr/bin/ld ld /usr/bin/ld-2.30 50
 RUN update-alternatives --set ld /usr/bin/ld-2.30
